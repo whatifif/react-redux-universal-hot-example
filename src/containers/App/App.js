@@ -53,6 +53,10 @@ export default class App extends Component {
     this.props.logout();
   }
 
+  handleWebvr(event) {
+    console.log('webvr', event);
+  }
+
   render() {
     const {user} = this.props;
     const styles = require('./App.scss');
@@ -72,7 +76,11 @@ export default class App extends Component {
               {user && <LinkContainer to="/chat">
                 <NavItem eventKey={1}>Chat</NavItem>
               </LinkContainer>}
-
+              <LinkContainer to="/webvr">
+                <NavItem eventKey={7} className="webvr-link" onClick={::this.handleWebvr}>
+                  Webvr
+                </NavItem>
+              </LinkContainer>
               <LinkContainer to="/widgets">
                 <NavItem eventKey={2}>Widgets</NavItem>
               </LinkContainer>
@@ -93,6 +101,7 @@ export default class App extends Component {
                   Logout
                 </NavItem>
               </LinkContainer>}
+
             </Nav>
             {user &&
             <p className={styles.loggedInMessage + ' navbar-text'}>Logged in as <strong>{user.name}</strong>.</p>}

@@ -64,6 +64,7 @@ app.use((req, res) => {
   const store = createStore(reduxReactRouter, getRoutes, createHistory, client);
 
   function hydrateOnClient() {
+    console.log('server67-hydrate');
     res.send('<!doctype html>\n' +
       ReactDOM.renderToString(<Html assets={webpackIsomorphicTools.assets()} store={store}/>));
   }
@@ -74,7 +75,8 @@ app.use((req, res) => {
   }
 
   store.dispatch(match(req.originalUrl, (error, redirectLocation, routerState) => {
-    if (redirectLocation) {
+   // console.log('server78');
+   if (redirectLocation) {
       res.redirect(redirectLocation.pathname + redirectLocation.search);
     } else if (error) {
       console.error('ROUTER ERROR:', pretty.render(error));
@@ -89,6 +91,7 @@ app.use((req, res) => {
       if (routerState.location.search && !routerState.location.query) {
         routerState.location.query = qs.parse(routerState.location.search);
       }
+   // console.log('server94');
 
       store.getState().router.then(() => {
         const component = (
@@ -101,8 +104,16 @@ app.use((req, res) => {
         if (status) {
           res.status(status);
         }
-        res.send('<!doctype html>\n' +
-          ReactDOM.renderToString(<Html assets={webpackIsomorphicTools.assets()} component={component} store={store}/>));
+   console.log('server107', req.originalUrl);
+        if(req.originalUrl !== '/webvr'){
+
+          res.send('<!doctype html>\n' +
+            ReactDOM.renderToString(<Html assets={webpackIsomorphicTools.assets()} component={component} store={store}/>));
+        }else{
+          console.log('webvr');
+          res.send('<!doctype html>\n' +
+            ReactDOM.renderToString(<Html assets={webpackIsomorphicTools.assets()}  store={store}/>));          
+        }
       }).catch((err) => {
         console.error('DATA FETCHING ERROR:', pretty.render(err));
         res.status(500);
